@@ -1,0 +1,62 @@
+@font-face {
+	src: url('https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2');
+	font-family:'Compressa VF';
+	font-style: normal;
+}
+
+body {
+	background-image: url(https://www.xmple.com/wallpaper/graph-paper-black-blue-grid-2700x1224-c2-000000-000080-l2-4-120-a-30-f-20.svg);
+	background-size: 120px 80px 10px 10px;
+	color: #ffff !important;
+	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+	font-stretch: 25px;
+	user-select: none;
+}
+
+.Title{
+    font-family:'Compressa VF';
+	text-rendering: optimizeSpeed;
+	color: white;
+	width: 100%;
+    font-size: 5rem !important;
+	margin: 0 auto;
+	text-transform: uppercase;
+	text-align: center;
+    text-decoration: underline;
+}
+
+h1{
+    font-size: 2rem !important;
+}
+
+input.transperent{
+    background: rgba(64, 135, 241, 0.627) !important;
+    border: none;
+ }
+
+.col {
+    padding: 60px;
+    padding-left: 40px !important;
+    margin: 30px;
+    height: 300px;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
+    border-radius: 5px;
+    position: relative;
+    z-index: 1;
+    background: inherit;
+    overflow: hidden;
+  }
+  
+.col:before {
+    content: "";
+    position: absolute;
+    background: inherit;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
+    filter: blur(10px);
+    margin: -20px;
+  }

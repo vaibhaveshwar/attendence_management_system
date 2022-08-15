@@ -1,0 +1,231 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.2.6/dist/web3.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="index.css" >
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script type="text/javascript">
+            
+            var contract;
+            var address = "0xCE4eAceFA764A884598f3bED7C07f1ab7623c61d";
+            var abi = 
+[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "adr",
+				"type": "address"
+			}
+		],
+		"name": "addAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "int256",
+				"name": "_rollno",
+				"type": "int256"
+			}
+		],
+		"name": "addAttendance",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "int256",
+				"name": "_rollno",
+				"type": "int256"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "int256",
+				"name": "_attendance",
+				"type": "int256"
+			}
+		],
+		"name": "addStudent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "int256",
+				"name": "_rollno",
+				"type": "int256"
+			}
+		],
+		"name": "viewAttendance",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "int256",
+						"name": "rollno",
+						"type": "int256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "int256",
+						"name": "attendance",
+						"type": "int256"
+					}
+				],
+				"internalType": "struct Attendance.Student1",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+	
+
+            web3 = new Web3(web3.currentProvider);
+            contract = new web3.eth.Contract(abi, address);
+
+			
+           
+            $(document).ready(function(){
+
+				window.addEventListener('load', () => {
+ // Wait for loading completion to avoid race conditions with web3 injection timing.
+  if (window.ethereum) {
+    const web3 = new Web3(window.ethereum);
+    try {
+      // Request account access if needed
+      window.ethereum.enable();
+      // Acccounts now exposed
+      return web3;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  // Legacy dapp browsers...
+  else if (window.web3) {
+    // Use Mist/MetaMask's provider.
+    const web3 = window.web3;
+    console.log('Injected web3 detected.');
+    return web3;
+  }
+  // Fallback to localhost; use dev console port by default...
+  else {
+    const provider = new Web3.providers.HttpProvider('http://127.0.0.1:9545');
+    const web3 = new Web3(provider);
+    console.log('No web3 instance injected, using Local web3.');
+    return web3;
+  }
+});
+
+                $("#_add").click(function(){
+
+                    web3.eth.getAccounts().then(function(accounts){
+
+                        var acnt = accounts[0];
+						console.log(acnt);
+                        var sid = $("#_sid").val();
+                        var name = $("#_name").val();
+                        var i = 0;
+                        return contract.methods.addStudent(sid, name, 0).send({from: acnt});
+                    }).then(function(trx){
+                        console.log(trx);
+                        alert("successfully added");
+                    })
+                })
+
+                $("#_addAttendence").click(function(){
+
+                    web3.eth.getAccounts().then(function(accounts){
+
+                        var acnt = accounts[0];
+                        var sid = $("#_rno").val();
+                        return contract.methods.addAttendance(sid).send({from: acnt});
+                    }).then(function(trx){
+                        console.log(trx);
+                        alert("successfully added");
+                    })
+                })
+
+
+                $("#_viewAttendence").click(function(){
+
+                    var s_id = parseInt($("#_rno").val());
+                    contract.methods.viewAttendance(s_id).call().then(function(name){
+                        $("#_viewname").val(name);
+                        console.log(name);
+                    })
+
+                })
+
+
+                $("#_addAdmin").click(function(){
+
+                    web3.eth.getAccounts().then(function(accounts){
+
+                        var acnt = accounts[0];
+                        var newad = $("#_newadmin").val();
+                        return contract.methods.addAdmin(newad).send({from: acnt});
+                    }).then(function(trx){
+                        console.log(trx);
+                        alert("successfully added");
+                    })
+                })
+
+            })
+
+        </script>
+    </head>
+    <body>
+        <h1 class="Title mt-4">Attendance Management</h1>
+        <div class="cointainer m-5">
+            <div class="row align-items-start">
+                <div class="col">
+                    <h1>Add Student</h1>
+                    <label class=" pt-3 pb-3" for="fname">Student ID</label>
+                    <input class="transperent" type="text" id="_sid">
+                    </br>
+                    <label class="pt-3 pb-3" for="lname">Name</label>
+                    <input class="transperent" type="text" id="_name" >
+                </br>
+                    <input class="btn btn-outline-primary" type="submit" value="Add" id="_add">
+                </div>
+                <div class="col">
+                    <h1>Add Attendence & View Attendence</h1>
+                    <label for="rno">RollNo</label>
+                    <input class="transperent" type="text" id="_rno">
+                    <input class="btn btn-outline-primary" type="submit" value="Add" id="_addAttendence">
+                    <br><br>
+                    <label for="detail">Roll no, Name, Attendence</label>
+                    <input class="transperent" type="text" id="_viewname" >
+                 
+                    <input class="btn btn-outline-primary" type="submit" value="View" id="_viewAttendence">
+                </div>
+              </div>
+        </div>
+        
+        <p id="tr1"></p>
+        
+        </body>
+</html>
